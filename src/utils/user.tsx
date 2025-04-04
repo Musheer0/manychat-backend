@@ -25,23 +25,3 @@ export const GetUserByPhoneNumber = async(number:string)=>{
     });
     return user
 }
-export const SendFriendRequest = async({sender, reciever}:{sender:string, reciever:string})=>{
-    if(sender && reciever){
-       const request = await prisma.friend.create({
-        data:{
-            sender_id:sender,
-            reciever_id:reciever
-        }
-       });
-       return request
-    }
-    return null;
-}
-export const GetFriendRequestById=async(id:string)=>{
-    const request = await prisma.friend.findFirst({
-        where:{
-            id
-        }
-    });
-    return request
-}

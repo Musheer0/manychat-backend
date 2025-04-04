@@ -12,48 +12,51 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model User{
-  id String @id @default(cuid())
-  clerk_id String @unique
-  phone_number String @unique
-  username String @unique
-  name String
-  image_url String
- push_subscriptions PushSubscriptions[]
- createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  sent_request Friend[] @relation("sender")
-  recieved_request Friend[] @relation("reciever")
-  chats Chat[]
+
+model User {
+  id                 String              @id @default(cuid())
+  clerk_id           String              @unique
+  phone_number       String              @unique
+  username           String              @unique
+  name               String
+  image_url          String
+  push_subscriptions PushSubscriptions[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  sent_request       Friend[]            @relation("sender")
+  recieved_request   Friend[]            @relation("reciever")
+  chats              Chat[]
 }
+
 model PushSubscriptions {
-  id String @id @default(cuid())
-  user_id String
-  user User @relation(fields: [user_id], references: [id] , onDelete: Cascade)
+  id           String   @id @default(cuid())
+  user_id      String
+  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   subscription String
-  ip String
+  ip           String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Friend {
+  id          String    @id @default(cuid())
+  sender_id   String    @unique
+  reciever_id String    @unique
+  sender      User      @relation("sender", fields: [sender_id], references: [id], onDelete: Cascade)
+  reciever    User      @relation("reciever", fields: [reciever_id], references: [id], onDelete: Cascade)
+  isAccepted  DateTime?
+  chat        Chat?     @relation("private")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  isBlocked   DateTime?
+  @@unique([sender_id, reciever_id])
+}
+
+model Chat {
+  id        String   @id @default(cuid())
+  users     User[]
+  friendId  String?  @unique
+  isPrivate Friend?  @relation("private", references: [id], fields: [friendId])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-model Friend{
-    id String @id @default(cuid())
-    sender_id String @unique
-    reciever_id String @unique
-    sender User @relation("sender", fields: [sender_id], references: [id], onDelete: Cascade)
-    reciever User @relation("reciever", fields: [reciever_id], references: [id], onDelete: Cascade)
-    isAccepted DateTime?
-    chat Chat? @relation("private")
-    @@unique([sender_id, reciever_id])
-      createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-model Chat{
-      id String @id @default(cuid())
-      users User[]
-      friendId String? @unique
-      isPrivate Friend? @relation("private", references: [id], fields: [friendId])
-        createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-        
-
 }
