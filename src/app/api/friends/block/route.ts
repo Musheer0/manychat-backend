@@ -1,5 +1,5 @@
 import prisma from "@/utils/prisma";
-import { GetUserByClerkId, GetUserById } from "@/utils/user";
+import { GetUserByClerkId } from "@/utils/user";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 

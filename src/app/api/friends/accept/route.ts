@@ -26,7 +26,7 @@ export const POST = async(req:NextRequest)=>{
         },{
             status:401
         });
-        var friend_request = await prisma.friend.findFirst({
+        let friend_request = await prisma.friend.findFirst({
             where:{
                 id,
                 AND:[
@@ -79,7 +79,8 @@ export const POST = async(req:NextRequest)=>{
                 userId: user.id,
                 url: `${process.env.BASE}/chat/${(await chat).id}`
             })
-           } catch (error) {
+            
+           } catch {
             return NextResponse.json({
                 success: true,
                 data:{

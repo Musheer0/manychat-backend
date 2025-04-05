@@ -1,11 +1,10 @@
-import { SubscribePushNotification, UnsubscribeNotification } from "@/utils/push-notification-subscription";
-import { GetUserByClerkId } from "@/utils/user";
+import {  UnsubscribeNotification } from "@/utils/push-notification-subscription";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async(req:NextRequest)=>{
     const {userId} = await auth();
-    const ip =req.headers.get('x-forwaded-for')||'127.0.0.1'
+    // const ip =req.headers.get('x-forwaded-for')||'127.0.0.1'
     //Todo Verify Request from front end
     const allow_api_request = true;
     if(!allow_api_request) return NextResponse.json({
@@ -37,7 +36,7 @@ export const POST = async(req:NextRequest)=>{
                 id: notification_subscriptions
             }
            });
-   } catch (error) {
+   } catch  {
     return NextResponse.json({
         sucess: false,
        },{

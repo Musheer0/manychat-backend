@@ -1,11 +1,11 @@
+/* eslint-disable */
+
 import prisma from "@/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async(req:NextRequest)=>{
     const body = await req.json()
-    const origin = req.referrer
-    console.log(origin)
-    const data =  body.data;
+    const data:any =  body.data;
     try {
         const user = {
             id: data.id,
@@ -13,10 +13,16 @@ export const POST = async(req:NextRequest)=>{
             username: data.username,
             first_name: data.first_name,
             last_name: data.last_name,
-            //@ts-ignore
-            phone_number : Array.from(data.phone_numbers).filter((number:any)=>number.id===data.primary_phone_number_id)[0]?.phone_number  || null
+            // @ts-ignore
+            phone_number : Array.from(data.phone_numbers).filter((number:any)=>number.id===data.primary_phone_number_id)[0]?.phone_number as string  || null
         };
         //todo add header check from clerk 
+        if(!user.phone_number) {
+            console.log('no phone number')
+            return NextResponse.json({
+                success:true
+            })
+        }
         const new_user = await prisma.user.create({
             data:{
                 clerk_id: user.id,
