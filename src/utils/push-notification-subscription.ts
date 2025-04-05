@@ -82,7 +82,8 @@ export const SendBrowserNotification = async({
             title,
             body,
             icon: '/icon.png',
-            url: url || `${process.env.BASE}\notifications`
+            url: url || `${process.env.BASE}\notifications`,
+             "silent": false
         })
        );
    })
